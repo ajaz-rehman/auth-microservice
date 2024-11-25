@@ -9,6 +9,7 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
+	logger := slog.Default()
 
 	if port == "" {
 		port = "5000"
@@ -16,11 +17,11 @@ func main() {
 
 	mux := server.GetMuxWithRoutes()
 
-	slog.Info("Starting server on port " + port)
+	logger.Info("Starting server on port " + port)
 
 	err := server.ListenAndServe(port, mux)
 
 	if err != nil {
-		slog.Error(err.Error())
+		logger.Error(err.Error())
 	}
 }
