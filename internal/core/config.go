@@ -1,4 +1,4 @@
-package utils
+package core
 
 func LoadConfig() (*Config, error) {
 	env, err := LoadEnv()

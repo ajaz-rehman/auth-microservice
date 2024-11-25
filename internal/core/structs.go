@@ -1,4 +1,4 @@
-package utils
+package core
 
 type ENV_TYPE string
 
