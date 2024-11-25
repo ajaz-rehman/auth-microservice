@@ -12,7 +12,7 @@ func main() {
 	config, err := core.LoadConfig()
 
 	if err != nil {
-		slog.Error("utils.LoadConfig: " + err.Error())
+		slog.Error("core.LoadConfig: " + err.Error())
 		os.Exit(1)
 	}
 
