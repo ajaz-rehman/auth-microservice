@@ -5,23 +5,26 @@ import (
 	"os"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/server"
+	"github.com/ajaz-rehman/auth-microservice/internal/utils"
 )
 
 func main() {
-	port := os.Getenv("PORT")
 	logger := slog.Default()
+	env, err := utils.LoadEnv()
 
-	if port == "" {
-		port = "5000"
+	if err != nil {
+		logger.Error("Error loading environment variables: " + err.Error())
+		os.Exit(1)
 	}
 
 	mux := server.GetMuxWithRoutes()
 
-	logger.Info("Starting server on port: " + port)
+	logger.Info("Starting server on port: " + env.PORT)
 
-	err := server.ListenAndServe(port, mux)
+	err = server.ListenAndServe(env.PORT, mux)
 
 	if err != nil {
 		logger.Error("Error starting server: " + err.Error())
+		os.Exit(1)
 	}
 }
