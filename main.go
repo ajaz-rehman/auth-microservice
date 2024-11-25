@@ -17,11 +17,11 @@ func main() {
 
 	mux := server.GetMuxWithRoutes()
 
-	logger.Info("Starting server on port " + port)
+	logger.Info("Starting server on port: " + port)
 
 	err := server.ListenAndServe(port, mux)
 
 	if err != nil {
-		logger.Error(err.Error())
+		logger.Error("Error starting server: " + err.Error())
 	}
 }
