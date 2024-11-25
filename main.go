@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	"log/slog"
 	"os"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/server"
@@ -15,11 +15,12 @@ func main() {
 	}
 
 	mux := server.GetMuxWithRoutes()
+
+	slog.Info("Starting server on port " + port)
+
 	err := server.ListenAndServe(port, mux)
 
 	if err != nil {
-		log.Fatalf("server.ListenAndServe: %v", err)
+		slog.Error(err.Error())
 	}
-
-	log.Printf("Server listening on port %s", port)
 }
