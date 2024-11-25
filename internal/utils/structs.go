@@ -12,3 +12,7 @@ type Env struct {
 	PORT   string
 	GO_ENV ENV_TYPE
 }
+
+type Config struct {
+	Env Env
+}

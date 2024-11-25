@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-func GetMuxWithRoutes() *http.ServeMux {
+func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 
 	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
@@ -14,7 +14,9 @@ func GetMuxWithRoutes() *http.ServeMux {
 	return mux
 }
 
-func ListenAndServe(port string, mux *http.ServeMux) error {
+func ListenAndServe(port string) error {
+	mux := getMuxWithRoutes()
+
 	server := &http.Server{
 		Addr:    ":" + port,
 		Handler: mux,

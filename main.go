@@ -9,22 +9,19 @@ import (
 )
 
 func main() {
-	logger := slog.Default()
-	env, err := utils.LoadEnv()
+	config, err := utils.LoadConfig()
 
 	if err != nil {
-		logger.Error("Error loading environment variables: " + err.Error())
+		slog.Error("utils.LoadConfig: " + err.Error())
 		os.Exit(1)
 	}
 
-	mux := server.GetMuxWithRoutes()
+	slog.Info("Starting server on port: " + config.Env.PORT)
 
-	logger.Info("Starting server on port: " + env.PORT)
-
-	err = server.ListenAndServe(env.PORT, mux)
+	err = server.ListenAndServe(config.Env.PORT)
 
 	if err != nil {
-		logger.Error("Error starting server: " + err.Error())
+		slog.Error("server.ListenAndServe: " + err.Error())
 		os.Exit(1)
 	}
 }
