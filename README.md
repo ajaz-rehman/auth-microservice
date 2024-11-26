@@ -11,7 +11,7 @@ I've created a lot of projects from scratch and authentication has always been a
 ## Prerequisites
 
 -   [Go 1.23+](https://go.dev)
--   [PostgreSQL 13+](https://postgresql.org)
+-   [PostgreSQL](https://postgresql.org)
 
 ## Installation
 
