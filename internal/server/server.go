@@ -4,12 +4,21 @@ import (
 	"net/http"
 )
 
+func getEndpoints() Endpoints {
+	endpoints := Endpoints{
+		"POST /signup": signupHandler,
+	}
+
+	return endpoints
+}
+
 func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
+	endpoints := getEndpoints()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, World!"))
-	})
+	for path, handler := range endpoints {
+		mux.HandleFunc(path, handler)
+	}
 
 	return mux
 }
