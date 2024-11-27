@@ -4,7 +4,7 @@ import "net/http"
 
 func getEndpoints() Endpoints {
 	endpoints := Endpoints{
-		"POST /signup": signupHandler,
+		"POST /v1/auth/signup": signupHandler,
 	}
 
 	return endpoints
