@@ -1,8 +1,6 @@
 package server
 
-import (
-	"net/http"
-)
+import "net/http"
 
 func getEndpoints() Endpoints {
 	endpoints := Endpoints{
