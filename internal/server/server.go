@@ -2,20 +2,12 @@ package server
 
 import "net/http"
 
-func getEndpoints() Endpoints {
-	endpoints := Endpoints{
-		"POST /v1/auth/signup": signupHandler,
-	}
-
-	return endpoints
-}
-
 func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 	endpoints := getEndpoints()
 
-	for path, handler := range endpoints {
-		mux.HandleFunc(path, handler)
+	for _, endpoint := range endpoints {
+		mux.HandleFunc(endpoint.Pattern, endpoint.Handler)
 	}
 
 	return mux
