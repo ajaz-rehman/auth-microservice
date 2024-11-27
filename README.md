@@ -20,7 +20,7 @@ Clone the repository and navigate to the project directory, then follow the step
 ### Create a `.env` file:
 
 ```dosini
-PORT=5000
+PORT=3000
 GO_ENV=development
 DATABASE_URL=postgres://admin:password@localhost:5432/test?sslmode=disable
 ```
