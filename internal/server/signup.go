@@ -1,7 +1,6 @@
 package server
 
 import (
-	"encoding/json"
 	"net/http"
 )
 
@@ -12,18 +11,8 @@ type SignupRequestBody struct {
 	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
 }
 
-func signupHandler(w http.ResponseWriter, r *http.Request) {
-	defer r.Body.Close()
-	data, err := transformAndValidateBody[SignupRequestBody](r.Body)
-
-	w.Header().Set("Content-Type", "application/json")
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-	json.NewEncoder(w).Encode(data)
-}
+var signupHandler = requestHandler(func(data SignupRequestBody) (status int, response any, err error) {
+	status = http.StatusOK
+	response = data
+	return
+})
