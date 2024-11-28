@@ -11,8 +11,8 @@ type SignupRequestBody struct {
 	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
 }
 
-var signupHandler = requestHandler(func(data SignupRequestBody) (status int, response any, err error) {
+func signupHandler(data SignupRequestBody) (status int, response any, err error) {
 	status = http.StatusOK
 	response = data
 	return
-})
+}

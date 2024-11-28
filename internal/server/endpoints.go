@@ -6,7 +6,7 @@ type Endpoints map[string]http.HandlerFunc
 
 func getEndpoints() Endpoints {
 	endpoints := Endpoints{
-		"POST /v1/auth/signup": signupHandler,
+		"POST /v1/auth/signup": requestHandler(signupHandler),
 	}
 
 	return endpoints
