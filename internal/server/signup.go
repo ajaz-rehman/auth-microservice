@@ -1,7 +1,18 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
+)
 
-func signupHandler(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Signup"))
+type SignupRequestBody struct {
+	FirstName string `json:"first_name" mod:"trim,lcase,title" validate:"required,alpha,ascii,min=2,max=25"`
+	LastName  string `json:"last_name" mod:"trim,lcase,title" validate:"required,alpha,ascii,min=2,max=25"`
+	Email     string `json:"email" mod:"trim,lcase" validate:"required,email"`
+	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
+}
+
+func signupHandler(data SignupRequestBody) (status int, response any, err error) {
+	status = http.StatusOK
+	response = data
+	return
 }
