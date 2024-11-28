@@ -17,9 +17,5 @@ func validateAndGetValue[T any](body io.ReadCloser) (value T, err error) {
 	validate := validator.New(validator.WithRequiredStructEnabled())
 	err = validate.Struct(value)
 
-	if err != nil {
-		return
-	}
-
 	return
 }
