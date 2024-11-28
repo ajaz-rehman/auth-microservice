@@ -22,7 +22,6 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Write data to response as json
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
