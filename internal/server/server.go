@@ -4,9 +4,9 @@ import "net/http"
 
 func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
-	endpoints := getEndpoints()
+	routes := getRoutes()
 
-	for pattern, handler := range endpoints {
+	for pattern, handler := range routes {
 		mux.HandleFunc(pattern, handler)
 	}
 
