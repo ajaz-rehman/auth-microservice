@@ -16,13 +16,14 @@ func signupHandler(w http.ResponseWriter, r *http.Request) {
 	defer r.Body.Close()
 	data, err := transformAndValidateBody[SignupRequestBody](r.Body)
 
+	w.Header().Set("Content-Type", "application/json")
+
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
+		json.NewEncoder(w).Encode(map[string]string{"error": err.Error()})
 		return
 	}
 
-	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(data)
 }
