@@ -12,7 +12,7 @@ type ErrorResponse struct {
 	Errors []string `json:"errors"`
 }
 
-func requestHandler[T any](jsonRequestHandler JsonRequestHandler[T]) (handler http.HandlerFunc) {
+func requestHandler[T any](handler JsonRequestHandler[T]) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		data, err := transformAndValidateBody[T](r.Body)
@@ -22,7 +22,7 @@ func requestHandler[T any](jsonRequestHandler JsonRequestHandler[T]) (handler ht
 			return
 		}
 
-		status, response, err := jsonRequestHandler(data)
+		status, response, err := handler(data)
 
 		if err != nil {
 			errorHandler(w, status, err)
