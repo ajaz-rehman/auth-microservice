@@ -1,18 +1,13 @@
 package server
 
+import "net/http"
+
+type Endpoints map[string]http.HandlerFunc
+
 func getEndpoints() Endpoints {
 	endpoints := Endpoints{
-		signupEndpoint,
+		"POST /v1/auth/signup": signupHandler,
 	}
 
 	return endpoints
-}
-
-var signupEndpoint = Endpoint{
-	Pattern: "POST /v1/auth/signup",
-	Handler: signupHandler,
-	RequestBody: map[string]interface{}{
-		"email":    "string",
-		"password": "string",
-	},
 }

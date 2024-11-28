@@ -6,8 +6,8 @@ func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 	endpoints := getEndpoints()
 
-	for _, endpoint := range endpoints {
-		mux.HandleFunc(endpoint.Pattern, endpoint.Handler)
+	for pattern, handler := range endpoints {
+		mux.HandleFunc(pattern, handler)
 	}
 
 	return mux
