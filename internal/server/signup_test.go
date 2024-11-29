@@ -8,21 +8,32 @@ import (
 )
 
 func TestSignup(t *testing.T) {
-	payload := SignupRequestBody{
-		FirstName: "test",
-		LastName:  "user",
-		Password:  "password",
-		Email:     "test@gmail.com",
+	tests := []core.HttpTest{
+		{
+			Name:    "Successful",
+			Handler: signupHandler,
+			RequestPayload: SignupRequestBody{
+				FirstName: "test",
+				LastName:  "user",
+				Password:  "password",
+				Email:     "test@gmail.com",
+			},
+			ExpectedStatus:   http.StatusCreated,
+			ExpectedResponse: nil,
+		},
+		{
+			Name:    "Duplicate",
+			Handler: signupHandler,
+			RequestPayload: SignupRequestBody{
+				FirstName: "test",
+				LastName:  "user",
+				Password:  "password",
+				Email:     "test@gmail.com",
+			},
+			ExpectedStatus:   http.StatusConflict,
+			ExpectedResponse: nil,
+		},
 	}
 
-	rr, err := core.MakeTestRequest(signupHandler, payload)
-
-	if err != nil {
-		t.Fatalf("Could not make request: %v", err)
-	}
-
-	if status := rr.Code; status != http.StatusCreated {
-		t.Errorf("handler returned wrong status code: got %v want %v",
-			status, http.StatusCreated)
-	}
+	core.RunHttpTests(t, tests)
 }
