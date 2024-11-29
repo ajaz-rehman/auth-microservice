@@ -1,5 +1,7 @@
 package core
 
+import "net/http"
+
 type ENV_TYPE string
 
 const (
@@ -15,4 +17,12 @@ type Env struct {
 
 type Config struct {
 	Env Env
+}
+
+type HttpTest struct {
+	Name             string
+	Handler          http.HandlerFunc
+	RequestPayload   interface{}
+	ExpectedStatus   int
+	ExpectedResponse interface{}
 }

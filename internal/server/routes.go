@@ -4,9 +4,11 @@ import "net/http"
 
 type Routes map[string]http.HandlerFunc
 
+var signupHandler = requestHandler(signup)
+
 func getRoutes() Routes {
 	routes := Routes{
-		"POST /v1/auth/signup": requestHandler(signupHandler),
+		"POST /signup": signupHandler,
 	}
 
 	return routes
