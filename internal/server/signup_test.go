@@ -8,28 +8,25 @@ import (
 )
 
 func TestSignup(t *testing.T) {
+	testUser := SignupRequestBody{
+		FirstName: "test",
+		LastName:  "user",
+		Password:  "password",
+		Email:     "test@gmail.com",
+	}
+
 	tests := []core.HttpTest{
 		{
-			Name:    "Successful",
-			Handler: signupHandler,
-			RequestPayload: SignupRequestBody{
-				FirstName: "test",
-				LastName:  "user",
-				Password:  "password",
-				Email:     "test@gmail.com",
-			},
+			Name:             "Successful",
+			Handler:          signupHandler,
+			RequestPayload:   testUser,
 			ExpectedStatus:   http.StatusCreated,
 			ExpectedResponse: nil,
 		},
 		{
-			Name:    "Duplicate",
-			Handler: signupHandler,
-			RequestPayload: SignupRequestBody{
-				FirstName: "test",
-				LastName:  "user",
-				Password:  "password",
-				Email:     "test@gmail.com",
-			},
+			Name:             "Duplicate",
+			Handler:          signupHandler,
+			RequestPayload:   testUser,
 			ExpectedStatus:   http.StatusConflict,
 			ExpectedResponse: nil,
 		},
