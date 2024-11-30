@@ -15,13 +15,18 @@ func TestSignup(t *testing.T) {
 		Email:     "test@gmail.com",
 	}
 
+	tokens := Tokens{
+		AccessToken:  "access",
+		RefreshToken: "refresh",
+	}
+
 	tests := []core.HttpTest{
 		{
 			Name:             "Successful",
 			Handler:          signupHandler,
 			RequestPayload:   testUser,
 			ExpectedStatus:   http.StatusCreated,
-			ExpectedResponse: nil,
+			ExpectedResponse: tokens,
 		},
 		{
 			Name:             "Duplicate",

@@ -3,8 +3,10 @@ package core
 import (
 	"bytes"
 	"encoding/json"
+	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
@@ -41,6 +43,30 @@ func RunHttpTests(t *testing.T, tests []HttpTest) {
 
 			if rr.Code != test.ExpectedStatus {
 				t.Errorf("Expected status %v, got %v", test.ExpectedStatus, rr.Code)
+			}
+
+			if test.ExpectedResponse != nil {
+				bodyBytes, err := io.ReadAll(rr.Body)
+
+				if err != nil {
+					t.Fatalf("Could not read response body: %v", err)
+				}
+
+				bodyString := strings.Trim(string(bodyBytes), "\n")
+
+				if bodyString == "" {
+					t.Fatalf("Empty response body")
+				}
+
+				expectedBytes, err := json.Marshal(test.ExpectedResponse)
+
+				if err != nil {
+					t.Fatalf("Could not marshal expected response: %v", err)
+				}
+
+				if bodyString != string(expectedBytes) {
+					t.Errorf("Expected response %v, got %v", string(expectedBytes), bodyString)
+				}
 			}
 		})
 	}

@@ -13,5 +13,9 @@ type SignupRequestBody struct {
 
 func signup(data SignupRequestBody) (status int, response any, err error) {
 	status = http.StatusCreated
+	response = Tokens{
+		AccessToken:  "access",
+		RefreshToken: "refresh",
+	}
 	return
 }
