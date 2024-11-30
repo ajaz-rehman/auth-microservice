@@ -2,6 +2,8 @@ package server
 
 import (
 	"net/http"
+
+	"github.com/ajaz-rehman/auth-microservice/internal/core"
 )
 
 type SignupRequestBody struct {
@@ -13,7 +15,7 @@ type SignupRequestBody struct {
 
 func signup(data SignupRequestBody) (status int, response any, err error) {
 	status = http.StatusCreated
-	response = Tokens{
+	response = core.Tokens{
 		AccessToken:  "access",
 		RefreshToken: "refresh",
 	}

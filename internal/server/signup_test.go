@@ -15,7 +15,7 @@ func TestSignup(t *testing.T) {
 		Email:     "test@gmail.com",
 	}
 
-	tokens := Tokens{
+	tokens := core.Tokens{
 		AccessToken:  "access",
 		RefreshToken: "refresh",
 	}
