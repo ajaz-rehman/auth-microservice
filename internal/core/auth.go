@@ -28,11 +28,13 @@ func CheckPasswordHash(password, hash string) error {
 }
 
 func MakeJWT(userID int, tokenSecret string) (string, error) {
+	subject := strconv.Itoa(userID)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
 		Issuer:    "auth-microservice",
 		IssuedAt:  jwt.NewNumericDate(time.Now()),
 		ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Hour)),
-		Subject:   string(userID),
+		Subject:   subject,
 	})
 
 	return token.SignedString([]byte(tokenSecret))
