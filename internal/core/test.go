@@ -42,6 +42,12 @@ func RunHttpTests(t *testing.T, tests []HttpTest) {
 			if rr.Code != test.ExpectedStatus {
 				t.Errorf("Expected status %v, got %v", test.ExpectedStatus, rr.Code)
 			}
+
+			if test.ExpectedResponseFn != nil {
+				if err := test.ExpectedResponseFn(rr); err != nil {
+					t.Errorf("Expected response failed: %v", err)
+				}
+			}
 		})
 	}
 }

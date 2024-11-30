@@ -1,6 +1,9 @@
 package core
 
-import "net/http"
+import (
+	"net/http"
+	"net/http/httptest"
+)
 
 type ENV_TYPE string
 
@@ -20,9 +23,14 @@ type Config struct {
 }
 
 type HttpTest struct {
-	Name             string
-	Handler          http.HandlerFunc
-	RequestPayload   interface{}
-	ExpectedStatus   int
-	ExpectedResponse interface{}
+	Name               string
+	Handler            http.HandlerFunc
+	RequestPayload     interface{}
+	ExpectedStatus     int
+	ExpectedResponseFn func(*httptest.ResponseRecorder) error
+}
+
+type Tokens struct {
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
