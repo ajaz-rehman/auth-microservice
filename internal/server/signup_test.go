@@ -1,7 +1,10 @@
 package server
 
 import (
+	"encoding/json"
+	"errors"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/core"
@@ -15,25 +18,45 @@ func TestSignup(t *testing.T) {
 		Email:     "test@gmail.com",
 	}
 
-	tokens := core.Tokens{
-		AccessToken:  "access",
-		RefreshToken: "refresh",
-	}
-
 	tests := []core.HttpTest{
 		{
-			Name:             "Successful",
-			Handler:          signupHandler,
-			RequestPayload:   testUser,
-			ExpectedStatus:   http.StatusCreated,
-			ExpectedResponse: tokens,
+			Name:           "Successful",
+			Handler:        signupHandler,
+			RequestPayload: testUser,
+			ExpectedStatus: http.StatusCreated,
+			ExpectedResponseFn: func(rr *httptest.ResponseRecorder) error {
+				var tokens core.Tokens
+
+				if err := json.NewDecoder(rr.Body).Decode(&tokens); err != nil {
+					return err
+				}
+
+				if tokens.AccessToken == "" {
+					return errors.New("empty access token")
+				}
+
+				if tokens.RefreshToken == "" {
+					return errors.New("empty refresh token")
+				}
+
+				userId, err := core.ValidateJWT(tokens.AccessToken, "secret")
+
+				if err != nil {
+					return err
+				}
+
+				if userId != 1 {
+					return errors.New("invalid user id")
+				}
+
+				return nil
+			},
 		},
 		{
-			Name:             "Duplicate",
-			Handler:          signupHandler,
-			RequestPayload:   testUser,
-			ExpectedStatus:   http.StatusConflict,
-			ExpectedResponse: nil,
+			Name:           "Duplicate",
+			Handler:        signupHandler,
+			RequestPayload: testUser,
+			ExpectedStatus: http.StatusConflict,
 		},
 	}
 

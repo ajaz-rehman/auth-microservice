@@ -15,8 +15,15 @@ type SignupRequestBody struct {
 
 func signup(data SignupRequestBody) (status int, response any, err error) {
 	status = http.StatusCreated
+	accessToken, err := core.MakeJWT(1, "secret")
+
+	if err != nil {
+		status = http.StatusInternalServerError
+		return
+	}
+
 	response = core.Tokens{
-		AccessToken:  "access",
+		AccessToken:  accessToken,
 		RefreshToken: "refresh",
 	}
 	return
