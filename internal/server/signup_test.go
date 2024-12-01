@@ -5,6 +5,7 @@ import (
 	"errors"
 	"net/http"
 	"net/http/httptest"
+	"os"
 	"testing"
 )
 
@@ -37,7 +38,9 @@ func TestSignup(t *testing.T) {
 					return errors.New("empty refresh token")
 				}
 
-				userId, err := ValidateJWT(tokens.AccessToken, "secret")
+				jwtSecret := os.Getenv("JWT_SECRET")
+
+				userId, err := ValidateJWT(tokens.AccessToken, jwtSecret)
 
 				if err != nil {
 					return err

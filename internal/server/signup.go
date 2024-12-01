@@ -2,6 +2,7 @@ package server
 
 import (
 	"net/http"
+	"os"
 )
 
 type SignupRequestBody struct {
@@ -13,7 +14,10 @@ type SignupRequestBody struct {
 
 func signup(data SignupRequestBody) (status int, response any, err error) {
 	status = http.StatusCreated
-	accessToken, err := MakeJWT(1, "secret")
+
+	jwtSecret := os.Getenv("JWT_SECRET")
+
+	accessToken, err := MakeJWT(1, jwtSecret)
 
 	if err != nil {
 		status = http.StatusInternalServerError
