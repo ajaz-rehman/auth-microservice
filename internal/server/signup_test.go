@@ -6,8 +6,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-
-	"github.com/ajaz-rehman/auth-microservice/internal/core"
 )
 
 func TestSignup(t *testing.T) {
@@ -18,14 +16,14 @@ func TestSignup(t *testing.T) {
 		Email:     "test@gmail.com",
 	}
 
-	tests := []core.HttpTest{
+	tests := []TableTest{
 		{
 			Name:           "Successful",
 			Handler:        signupHandler,
 			RequestPayload: testUser,
 			ExpectedStatus: http.StatusCreated,
 			ExpectedResponseFn: func(rr *httptest.ResponseRecorder) error {
-				var tokens core.Tokens
+				var tokens Tokens
 
 				if err := json.NewDecoder(rr.Body).Decode(&tokens); err != nil {
 					return err
@@ -39,7 +37,7 @@ func TestSignup(t *testing.T) {
 					return errors.New("empty refresh token")
 				}
 
-				userId, err := core.ValidateJWT(tokens.AccessToken, "secret")
+				userId, err := ValidateJWT(tokens.AccessToken, "secret")
 
 				if err != nil {
 					return err
@@ -60,5 +58,5 @@ func TestSignup(t *testing.T) {
 		},
 	}
 
-	core.RunHttpTests(t, tests)
+	RunHttpTests(t, tests)
 }

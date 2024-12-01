@@ -1,4 +1,4 @@
-package core
+package server
 
 import (
 	"bytes"
@@ -7,6 +7,14 @@ import (
 	"net/http/httptest"
 	"testing"
 )
+
+type TableTest struct {
+	Name               string
+	Handler            http.HandlerFunc
+	RequestPayload     interface{}
+	ExpectedStatus     int
+	ExpectedResponseFn func(*httptest.ResponseRecorder) error
+}
 
 func MakeTestRequest(handle http.HandlerFunc, payload interface{}) (*httptest.ResponseRecorder, error) {
 	body, err := json.Marshal(payload)
@@ -30,7 +38,7 @@ func MakeTestRequest(handle http.HandlerFunc, payload interface{}) (*httptest.Re
 	return rr, nil
 }
 
-func RunHttpTests(t *testing.T, tests []HttpTest) {
+func RunHttpTests(t *testing.T, tests []TableTest) {
 	for _, test := range tests {
 		t.Run(test.Name, func(t *testing.T) {
 			rr, err := MakeTestRequest(test.Handler, test.RequestPayload)

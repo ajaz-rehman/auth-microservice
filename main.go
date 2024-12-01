@@ -4,21 +4,22 @@ import (
 	"log/slog"
 	"os"
 
-	"github.com/ajaz-rehman/auth-microservice/internal/core"
 	"github.com/ajaz-rehman/auth-microservice/internal/server"
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	config, err := core.LoadConfig()
+	godotenv.Load()
 
-	if err != nil {
-		slog.Error("core.LoadConfig: " + err.Error())
-		os.Exit(1)
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		slog.Error("PORT is required")
 	}
 
-	slog.Info("Starting server on port: " + config.Env.PORT)
+	slog.Info("Starting server on port: " + port)
 
-	err = server.ListenAndServe(config.Env.PORT)
+	err := server.ListenAndServe(port)
 
 	if err != nil {
 		slog.Error("server.ListenAndServe: " + err.Error())
