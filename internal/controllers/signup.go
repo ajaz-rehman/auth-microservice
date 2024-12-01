@@ -15,10 +15,7 @@ type SignupRequest struct {
 }
 
 func Signup(data SignupRequest) (status int, response interface{}, err error) {
-	status = http.StatusCreated
-
 	jwtSecret := os.Getenv("JWT_SECRET")
-
 	accessToken, err := auth.CreateJWTToken(1, jwtSecret)
 
 	if err != nil {
@@ -26,6 +23,7 @@ func Signup(data SignupRequest) (status int, response interface{}, err error) {
 		return
 	}
 
+	status = http.StatusCreated
 	response = auth.Tokens{
 		AccessToken:  accessToken,
 		RefreshToken: "refresh",
