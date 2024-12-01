@@ -10,8 +10,8 @@ func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
 	routes := routes.GetRoutes()
 
-	for pattern, handler := range routes {
-		mux.HandleFunc(pattern, handler)
+	for _, route := range routes {
+		mux.HandleFunc(route.Pattern, route.Handler)
 	}
 
 	return mux

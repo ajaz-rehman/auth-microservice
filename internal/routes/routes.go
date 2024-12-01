@@ -4,10 +4,11 @@ import (
 	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
 )
 
-func GetRoutes() Routes {
-	Routes := Routes{
-		"POST /signup": requestHandler(controllers.Signup),
+func GetRoutes() []Route {
+	return []Route{
+		{
+			Pattern: "POST /signup",
+			Handler: requestHandler(controllers.Signup),
+		},
 	}
-
-	return Routes
 }

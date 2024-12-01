@@ -2,7 +2,10 @@ package routes
 
 import "net/http"
 
-type Routes map[string]http.HandlerFunc
+type Route struct {
+	Pattern string
+	Handler http.HandlerFunc
+}
 
 type ErrorResponse struct {
 	Errors []string `json:"errors"`
