@@ -1,13 +1,17 @@
 package server
 
-import "net/http"
+import (
+	"net/http"
+
+	"github.com/ajaz-rehman/auth-microservice/internal/routes"
+)
 
 func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
-	routes := getRoutes()
+	routes := routes.GetRoutes()
 
-	for pattern, handler := range routes {
-		mux.HandleFunc(pattern, handler)
+	for _, route := range routes {
+		mux.HandleFunc(route.Pattern, route.Handler)
 	}
 
 	return mux

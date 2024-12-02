@@ -3,4 +3,4 @@
 # This script is used to build the application.
 
 # Build the application
-go build -o auth .
+go build -o bin/auth .

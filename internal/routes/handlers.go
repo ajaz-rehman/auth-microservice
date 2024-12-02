@@ -1,18 +1,14 @@
-package server
+package routes
 
 import (
 	"encoding/json"
 	"net/http"
 	"strings"
+
+	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
 )
 
-type JsonRequestHandler[T any] func(data T) (status int, response any, err error)
-
-type ErrorResponse struct {
-	Errors []string `json:"errors"`
-}
-
-func requestHandler[T any](handler JsonRequestHandler[T]) http.HandlerFunc {
+func requestHandler[T any](controller controllers.Controller[T]) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
 		data, err := transformAndValidateBody[T](r.Body)
@@ -22,7 +18,7 @@ func requestHandler[T any](handler JsonRequestHandler[T]) http.HandlerFunc {
 			return
 		}
 
-		status, response, err := handler(data)
+		status, response, err := controller(data)
 
 		if err != nil {
 			errorHandler(w, status, err)
