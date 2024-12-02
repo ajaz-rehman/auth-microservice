@@ -11,7 +11,7 @@ import (
 	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
 )
 
-func TestSignupEndpoint(t *testing.T) {
+func TestSignup(t *testing.T) {
 	setupServer()
 
 	testUser := controllers.SignupRequest{
