@@ -8,17 +8,11 @@ import (
 	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
 )
 
-func requestHandler(controller controllers.Controller) http.HandlerFunc {
+func controllerHandler(controller controllers.Controller) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		defer r.Body.Close()
-		data, err := transformAndValidateBody(r.Body)
 
-		if err != nil {
-			errorHandler(w, http.StatusBadRequest, err)
-			return
-		}
-
-		status, response, err := controller(data)
+		status, response, err := controller(r)
 
 		if err != nil {
 			errorHandler(w, status, err)

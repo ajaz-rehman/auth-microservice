@@ -1,3 +1,5 @@
 package controllers
 
-type Controller func(data interface{}) (status int, response interface{}, err error)
+import "net/http"
+
+type Controller func(resp *http.Request) (status int, response interface{}, err error)
