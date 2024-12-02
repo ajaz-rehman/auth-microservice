@@ -7,8 +7,8 @@ import (
 func GetRoutes() []Route {
 	return []Route{
 		{
-			Pattern: "POST /signup",
-			Handler: requestHandler(controllers.Signup),
+			Pattern:    "POST /signup",
+			Controller: controllers.Signup,
 		},
 	}
 }

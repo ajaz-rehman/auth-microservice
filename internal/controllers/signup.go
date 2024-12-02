@@ -14,7 +14,7 @@ type SignupRequest struct {
 	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
 }
 
-func Signup(data SignupRequest) (status int, response interface{}, err error) {
+func Signup(data interface{}) (status int, response interface{}, err error) {
 	jwtSecret := os.Getenv("JWT_SECRET")
 	accessToken, err := auth.CreateJWTToken(1, jwtSecret)
 

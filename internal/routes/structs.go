@@ -1,12 +1,10 @@
 package routes
 
-import "net/http"
+import (
+	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
+)
 
 type Route struct {
-	Pattern string
-	Handler http.HandlerFunc
-}
-
-type ErrorResponse struct {
-	Errors []string `json:"errors"`
+	Pattern    string
+	Controller controllers.Controller
 }
