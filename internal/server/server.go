@@ -1,9 +1,13 @@
 package server
 
 import (
+	"errors"
+	"log/slog"
 	"net/http"
+	"os"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/routes"
+	"github.com/joho/godotenv"
 )
 
 func getMuxWithRoutes() *http.ServeMux {
@@ -17,7 +21,17 @@ func getMuxWithRoutes() *http.ServeMux {
 	return mux
 }
 
-func ListenAndServe(port string) error {
+func ListenAndServe() error {
+	godotenv.Load()
+
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		return errors.New("PORT environment variable not set")
+	}
+
+	slog.Info("Starting server on port: " + port)
+
 	mux := getMuxWithRoutes()
 
 	server := &http.Server{
