@@ -1,70 +1,71 @@
 package tests
 
 import (
-	"bytes"
 	"encoding/json"
+	"errors"
 	"net/http"
+	"os"
 	"testing"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/auth"
+	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
 )
 
 func TestSignupEndpoint(t *testing.T) {
-	// Set up the server
 	setupServer()
 
-	// Define the test user
-	testUser := map[string]string{
-		"first_name": "test",
-		"last_name":  "user",
-		"email":      "test@gmail.com",
-		"password":   "password",
+	testUser := controllers.SignupRequest{
+		FirstName: "test",
+		LastName:  "user",
+		Password:  "password",
+		Email:     "test@gmail.com",
 	}
 
-	// Marshal the test user to JSON
-	body, err := json.Marshal(testUser)
+	tests := []TableTest{
+		{
+			Name:           "Successful",
+			Method:         "POST",
+			Endpoint:       "/signup",
+			RequestPayload: testUser,
+			ExpectedStatus: http.StatusCreated,
+			ExpectedResponseFn: func(resp *http.Response) error {
+				var tokens auth.Tokens
 
-	if err != nil {
-		t.Fatalf("Could not marshal test user: %v", err)
+				if err := json.NewDecoder(resp.Body).Decode(&tokens); err != nil {
+					return err
+				}
+
+				if tokens.AccessToken == "" {
+					return errors.New("empty access token")
+				}
+
+				if tokens.RefreshToken == "" {
+					return errors.New("empty refresh token")
+				}
+
+				jwtSecret := os.Getenv("JWT_SECRET")
+
+				userId, err := auth.ValidateJWTToken(tokens.AccessToken, jwtSecret)
+
+				if err != nil {
+					return err
+				}
+
+				if userId != 1 {
+					return errors.New("invalid user id")
+				}
+
+				return nil
+			},
+		},
+		{
+			Name:           "Duplicate",
+			Method:         "POST",
+			Endpoint:       "/signup",
+			RequestPayload: testUser,
+			ExpectedStatus: http.StatusConflict,
+		},
 	}
 
-	// Make the request
-	req, err := http.NewRequest("POST", "http://localhost:3000/signup", bytes.NewBuffer(body))
-
-	if err != nil {
-		t.Fatalf("Could not create request: %v", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-
-	// Record the response
-	client := &http.Client{}
-	resp, err := client.Do(req)
-
-	if err != nil {
-		t.Fatalf("Could not make request: %v", err)
-	}
-
-	defer resp.Body.Close()
-
-	// Check the status code
-	if resp.StatusCode != http.StatusCreated {
-		t.Errorf("Expected status %v, got %v", http.StatusCreated, resp.StatusCode)
-	}
-
-	// Check the response body
-	var tokens auth.Tokens
-	err = json.NewDecoder(resp.Body).Decode(&tokens)
-
-	if err != nil {
-		t.Fatalf("Could not decode response: %v", err)
-	}
-
-	if tokens.AccessToken == "" {
-		t.Errorf("Expected access token, got empty string")
-	}
-
-	if tokens.RefreshToken == "" {
-		t.Errorf("Expected refresh token, got empty string")
-	}
+	RunHttpTests(t, tests)
 }

@@ -25,3 +25,7 @@ func setupServer() {
 	// Wait for the server to start
 	time.Sleep(time.Second)
 }
+
+func getServerURL() string {
+	return "http://localhost:" + os.Getenv("PORT")
+}
