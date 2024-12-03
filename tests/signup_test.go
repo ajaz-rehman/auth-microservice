@@ -8,13 +8,13 @@ import (
 	"testing"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/auth"
-	"github.com/ajaz-rehman/auth-microservice/internal/controllers"
+	"github.com/ajaz-rehman/auth-microservice/internal/handlers"
 )
 
 func TestSignup(t *testing.T) {
 	setupServer()
 
-	testUser := controllers.SignupRequest{
+	testUser := handlers.SignupRequest{
 		FirstName: "test",
 		LastName:  "user",
 		Password:  "password",
