@@ -1,6 +1,8 @@
 package app
 
-import "database/sql"
+import (
+	"github.com/ajaz-rehman/auth-microservice/internal/database"
+)
 
 type Environment struct {
 	PORT         string
@@ -10,6 +12,6 @@ type Environment struct {
 }
 
 type App struct {
-	DB  *sql.DB
+	DB  *database.Queries
 	ENV Environment
 }
