@@ -8,6 +8,10 @@ import (
 )
 
 func CreateJWTToken(userID int, tokenSecret string) (string, error) {
+	if tokenSecret == "" {
+		return "", jwt.ErrInvalidKey
+	}
+
 	subject := strconv.Itoa(userID)
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.RegisteredClaims{
