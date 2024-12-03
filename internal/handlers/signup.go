@@ -30,9 +30,16 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	refreshToken, err := auth.CreateRefreshToken()
+
+	if err != nil {
+		helpers.RespondWithError(w, http.StatusInternalServerError, err)
+		return
+	}
+
 	response := auth.Tokens{
 		AccessToken:  accessToken,
-		RefreshToken: "refresh",
+		RefreshToken: refreshToken,
 	}
 
 	helpers.RespondWithJSON(w, http.StatusCreated, response)
