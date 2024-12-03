@@ -9,6 +9,7 @@ require github.com/go-playground/validator/v10 v10.23.0
 require (
 	github.com/go-playground/mold/v4 v4.5.0
 	github.com/golang-jwt/jwt/v5 v5.2.1
+	github.com/lib/pq v1.10.9
 	golang.org/x/crypto v0.29.0
 )
 
