@@ -1,8 +1,10 @@
 package server
 
-import "net/http"
+import (
+	"github.com/ajaz-rehman/auth-microservice/internal/handlers"
+)
 
 type Route struct {
 	Pattern string
-	Handler http.HandlerFunc
+	Handler handlers.Handler
 }

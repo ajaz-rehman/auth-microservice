@@ -2,8 +2,8 @@ package handlers
 
 import (
 	"net/http"
-	"os"
 
+	"github.com/ajaz-rehman/auth-microservice/internal/app"
 	"github.com/ajaz-rehman/auth-microservice/internal/auth"
 	"github.com/ajaz-rehman/auth-microservice/internal/helpers"
 )
@@ -15,32 +15,33 @@ type SignupRequest struct {
 	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
 }
 
-func SignupHandler(w http.ResponseWriter, r *http.Request) {
-	_, err := helpers.TransformAndValidateBody[SignupRequest](r.Body)
+func SignupHandler(app *app.App) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		_, err := helpers.TransformAndValidateBody[SignupRequest](r.Body)
 
-	if err != nil {
-		helpers.RespondWithError(w, http.StatusBadRequest, err)
+		if err != nil {
+			helpers.RespondWithError(w, http.StatusBadRequest, err)
+		}
+
+		accessToken, err := auth.CreateJWTToken(1, app.ENV.JWTSecret)
+
+		if err != nil {
+			helpers.RespondWithError(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		refreshToken, err := auth.CreateRefreshToken()
+
+		if err != nil {
+			helpers.RespondWithError(w, http.StatusInternalServerError, err)
+			return
+		}
+
+		response := auth.Tokens{
+			AccessToken:  accessToken,
+			RefreshToken: refreshToken,
+		}
+
+		helpers.RespondWithJSON(w, http.StatusCreated, response)
 	}
-
-	jwtSecret := os.Getenv("JWT_SECRET")
-	accessToken, err := auth.CreateJWTToken(1, jwtSecret)
-
-	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	refreshToken, err := auth.CreateRefreshToken()
-
-	if err != nil {
-		helpers.RespondWithError(w, http.StatusInternalServerError, err)
-		return
-	}
-
-	response := auth.Tokens{
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-	}
-
-	helpers.RespondWithJSON(w, http.StatusCreated, response)
 }
