@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func RespondWithJSON(w http.ResponseWriter, status int, data interface{}) {
+func respondWithJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
 	err := json.NewEncoder(w).Encode(data)
@@ -15,6 +15,6 @@ func RespondWithJSON(w http.ResponseWriter, status int, data interface{}) {
 	}
 }
 
-func RespondWithError(w http.ResponseWriter, status int, err error) {
-	RespondWithJSON(w, status, map[string]string{"error": err.Error()})
+func respondWithError(w http.ResponseWriter, status int, err error) {
+	respondWithJSON(w, status, map[string]string{"error": err.Error()})
 }

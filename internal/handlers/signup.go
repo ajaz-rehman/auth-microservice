@@ -2,7 +2,6 @@ package handlers
 
 import (
 	"net/http"
-	"strings"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/app"
 	"github.com/ajaz-rehman/auth-microservice/internal/auth"
@@ -18,21 +17,14 @@ type SignupRequest struct {
 }
 
 func SignupHandler(app *app.App) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		data, err := helpers.TransformAndValidateBody[SignupRequest](r.Body)
-
-		if err != nil {
-			helpers.RespondWithError(w, http.StatusBadRequest, err)
-		}
-
+	return helpers.HandleRequest(func(data SignupRequest, req *http.Request) (status int, res interface{}, err error) {
 		hashedPassword, err := auth.HashPassword(data.Password)
 
 		if err != nil {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		_, err = app.DB.CreateUser(r.Context(), database.CreateUserParams{
+		_, err = app.DB.CreateUser(req.Context(), database.CreateUserParams{
 			FirstName:      data.FirstName,
 			LastName:       data.LastName,
 			Email:          data.Email,
@@ -40,34 +32,26 @@ func SignupHandler(app *app.App) http.HandlerFunc {
 		})
 
 		if err != nil {
-			if strings.Contains(err.Error(), "unique constraint") {
-				helpers.RespondWithError(w, http.StatusConflict, err)
-				return
-			}
-
-			helpers.RespondWithError(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		accessToken, err := auth.CreateJWTToken(1, app.ENV.JWTSecret)
 
 		if err != nil {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err)
 			return
 		}
 
 		refreshToken, err := auth.CreateRefreshToken()
 
 		if err != nil {
-			helpers.RespondWithError(w, http.StatusInternalServerError, err)
 			return
 		}
 
-		response := auth.Tokens{
+		res = auth.Tokens{
 			AccessToken:  accessToken,
 			RefreshToken: refreshToken,
 		}
 
-		helpers.RespondWithJSON(w, http.StatusCreated, response)
-	}
+		return
+	})
 }
