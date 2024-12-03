@@ -19,7 +19,7 @@ func SignupHandler(w http.ResponseWriter, r *http.Request) {
 	_, err := helpers.TransformAndValidateBody[SignupRequest](r.Body)
 
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		helpers.RespondWithError(w, http.StatusBadRequest, err)
 	}
 
 	jwtSecret := os.Getenv("JWT_SECRET")
