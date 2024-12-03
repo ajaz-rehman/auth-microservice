@@ -1,4 +1,4 @@
-package server
+package helpers
 
 import (
 	"context"
@@ -9,7 +9,7 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func transformAndValidateBody(body io.ReadCloser) (value interface{}, err error) {
+func TransformAndValidateBody[T any](body io.ReadCloser) (value T, err error) {
 	// Decode the json body into the value
 	err = json.NewDecoder(body).Decode(&value)
 

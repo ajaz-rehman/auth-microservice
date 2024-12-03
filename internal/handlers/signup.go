@@ -1,10 +1,11 @@
-package controllers
+package handlers
 
 import (
 	"net/http"
 	"os"
 
 	"github.com/ajaz-rehman/auth-microservice/internal/auth"
+	"github.com/ajaz-rehman/auth-microservice/internal/helpers"
 )
 
 type SignupRequest struct {
@@ -14,20 +15,25 @@ type SignupRequest struct {
 	Password  string `json:"password" validate:"required,ascii,min=8,max=50,excludes= "`
 }
 
-func Signup(resp *http.Request) (status int, response interface{}, err error) {
+func SignupHandler(w http.ResponseWriter, r *http.Request) {
+	_, err := helpers.TransformAndValidateBody[SignupRequest](r.Body)
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
 	jwtSecret := os.Getenv("JWT_SECRET")
 	accessToken, err := auth.CreateJWTToken(1, jwtSecret)
 
 	if err != nil {
-		status = http.StatusInternalServerError
+		helpers.RespondWithError(w, http.StatusInternalServerError, err)
 		return
 	}
 
-	status = http.StatusCreated
-	response = auth.Tokens{
+	response := auth.Tokens{
 		AccessToken:  accessToken,
 		RefreshToken: "refresh",
 	}
 
-	return
+	helpers.RespondWithJSON(w, http.StatusCreated, response)
 }

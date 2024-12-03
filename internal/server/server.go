@@ -6,16 +6,15 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/ajaz-rehman/auth-microservice/internal/routes"
 	"github.com/joho/godotenv"
 )
 
 func getMuxWithRoutes() *http.ServeMux {
 	mux := http.NewServeMux()
-	routes := routes.GetRoutes()
+	routes := GetRoutes()
 
 	for _, route := range routes {
-		mux.HandleFunc(route.Pattern, controllerHandler(route.Controller))
+		mux.HandleFunc(route.Pattern, route.Handler)
 	}
 
 	return mux
